@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Text, StyleSheet, View, Button } from "react-native";
+import { Text, StyleSheet, View, Button, Alert } from "react-native";
 import SeleccionarImagen from "../SeleccionarImagen";
 import { connect } from "react-redux";
 import { blur } from "redux-form";
 import {
   actionCargarImagenPublicacion,
   actionSubirPublicacion,
-  actionLimpiarImagenPublicacion
+  actionLimpiarImagenPublicacion,
+  actionLimpiarSubirPublicacion
 } from "../../Store/ACCIONES";
 import SeleccionarGaleriaForm from "./SeleccionarGaleriaForm";
 
@@ -18,8 +19,54 @@ class SeleccionarGaleria extends Component {
   publicado2() {
     console.log("Publicado amigo2");
   }
+
+  //Componentes del ciclo de vida de react
   componentWillUnmount() {
     this.props.limpiarImagen(); //Se ejecuta antes del que el componente sea destruido
+  }
+
+  //Se ejecuta cada vez que recibe nuevas propiedas
+  //Recibe los nuevos parametros osea las nuevas propiedades que se inyectan
+  componentWillReceiveProps(nextProps) {
+    //Comparo las propiedades actuales, las que se tienen y las que estan llegando (nextPropr)
+    if (
+      this.props.estadoSubirPublicacion !== nextProps.estadoSubirPublicacion
+    ) {
+      switch (nextProps.estadoSubirPublicacion) {
+        case "EXITO":
+          console.log("Exito");
+          //Alert paso el titulo de la alerta, el mensaje y el boton
+          Alert.alert("Exito", "La publicación fue realizada correctamente", [
+            {
+              text: "Ok",
+              onPress: () => {
+                this.props.limpiarEstadoPublicacion(); //Coloco el estado nuevamente en nulo
+                this.props.navigation.goBack();
+              }
+            }
+          ]);
+
+          break;
+        case "ERROR":
+          console.log("Error");
+          Alert.alert(
+            "Error",
+            "La publicación no se realizó, intente nuevamente...",
+            [
+              {
+                text: "Confirmar",
+                onPress: () => {
+                  this.props.limpiarEstadoPublicacion(); //Coloco el estado nuevamente en nulo
+                  this.props.navigation.goBack();
+                }
+              }
+            ]
+          );
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   render() {
@@ -57,7 +104,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  imagen: state.reducerImagenPublicacion //Propiedad inyectada del Store, cambia el valor de la propiedad imagen por que lo tomo del reducer
+  imagen: state.reducerImagenPublicacion, //Propiedad inyectada del Store, cambia el valor de la propiedad imagen por que lo tomo del reducer
+  estadoSubirPublicacion: state.reducerExitoSubirPublicacion.estado //Accedo directamente al estado, esta respuesta viene del stores
 });
 
 const mapDispatchToProps = dispatch => {
@@ -71,6 +119,9 @@ const mapDispatchToProps = dispatch => {
     },
     limpiarImagen: () => {
       dispatch(actionLimpiarImagenPublicacion());
+    },
+    limpiarEstadoPublicacion: () => {
+      dispatch(actionLimpiarSubirPublicacion());
     }
   };
 };

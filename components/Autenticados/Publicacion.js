@@ -7,15 +7,17 @@ import {
   Image,
   Dimensions
 } from "react-native";
+import Icon from "react-native-ionicons";
 
 class Publicacion extends Component {
   render() {
-    console.log(this.props.autor);
+    //console.log(this.props.autor);
     const { navigation, item, autor } = this.props; //Ese item es el que estoy pasando
     const { width } = Dimensions.get("window"); //Para tener el ancho de la pantalla
-    console.log(width);
+    //console.log(width);
     const factor = item.width / width; //item.width es el ancho de la imagen y el width es de la pantalla
     const height = item.height / factor;
+
     return (
       <View>
         <View style={styles.header}>
@@ -30,10 +32,19 @@ class Publicacion extends Component {
           style={{ width, height }}
         />
         <View style={styles.footer}>
-        <View style={styles.icons}>
-          
-        </View>
-          <Text>Likes</Text>
+          <View />
+          <View style={styles.icons}>
+           {/*  <Icon name="heart" color="#000000" size={30} style={styles.icon} />
+            <Icon
+              name="chatbubbles"
+              color="#000000"
+              size={30}
+              style={styles.icon}
+            /> */}
+          </View>
+          <View style={styles.texto}>
+            <Text>{item.texto}</Text>
+          </View>
           <Text>Comentarios</Text>
         </View>
 
@@ -63,7 +74,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    marginTop: 35,
+    marginVertical: 16,
+    marginBottom: 16
+  },
+  footer: {
+    marginHorizontal: 16
+  },
+  icons: {
+    flexDirection: "row"
+  },
+  icon: {
+    marginRight: 16,
+    marginVertical: 16
+  },
+  texto: {
     marginBottom: 16
   }
 });

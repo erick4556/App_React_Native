@@ -13,7 +13,7 @@ import { actionDescargarPublicaciones } from "../../Store/ACCIONES";
 import Publicacion from "./Publicacion";
 
 class Home extends Component {
-  //Se ejecuta cuando se ejecuta el metodo render
+  //Se ejecuta despues que se ejecuta el metodo render
   componentDidMount() {
     this.props.descargarPublicaciones();
   }

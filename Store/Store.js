@@ -71,7 +71,22 @@ const reducerAutoresDescargados = (state = [], action) => {
     case CONSTANTES.AGREGAR_AUTORES_STORE:
       //Como voy hacer la carga una sola vez hago esto
       return [...state, ...action.autores]; //autores viene de la acion//...state es el state anterior y ..action.autores: agrego los autores al arreglo uno por uno sino ingresa array completo
-                        //Me permite agregar cada elemento del array que le paso desde la saga
+    //Me permite agregar cada elemento del array que le paso desde la saga
+    default:
+      return state;
+  }
+};
+
+//state va ser igual a un objeto que va poner el estado que var nulo incialmente
+const reducerExitoSubirPublicacion = (state = { estado: null }, action) => {
+  switch (action.type) {
+    case CONSTANTES.EXITO_SUBIR_PUBLICACION:
+      return { estado: "EXITO" }; //return de un objeto
+
+    case CONSTANTES.ERROR_SUBIR_PUBLICACION:
+      return { estado: "ERROR" }; //return de un objeto
+    case CONSTANTES.LIMPIAR_SUBIR_PUBLICACION:
+      return { estado: null };
     default:
       return state;
   }
@@ -83,7 +98,7 @@ const reducerPublicacionesDescargadas = (state = [], action) => {
     case CONSTANTES.AGREGAR_PUBLICACIONES_STORE:
       //Como voy hacer la carga una sola vez hago esto
       return [...state, ...action.publicaciones]; //...state es el state anterior y agrego las publicaciones al arreglo uno por uno
-                        //Me permite agregar cada elemento del array que le paso desde la saga
+    //Me permite agregar cada elemento del array que le paso desde la saga
     default:
       return state;
   }
@@ -95,6 +110,7 @@ const sagaMiddleware = createSagaMiddleware();
 //Produce un objeto el resultado de cada una de las acciones de los reducers
 const reducers = combineReducers({
   //reducerPrueba: reducerPrueba //Corresponde a un arreglo
+  reducerExitoSubirPublicacion,
   reducerAutoresDescargados,
   reducerPublicacionesDescargadas,
   reducerSesion,

@@ -1,7 +1,7 @@
 import firebase from "firebase";
 
 var firebaseConfig = {
-  //Informacion de firebase como apiKey, authDomain etc
+  //Información de firebase como apiKey, authDomain etc
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

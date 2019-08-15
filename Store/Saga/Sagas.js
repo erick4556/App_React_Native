@@ -3,7 +3,9 @@ import { autenticacion, basedeDatos } from "../Servicios/Firebase";
 import CONSTANTES from "../CONSTANTES";
 import {
   actionAgregarPublicacionesStore,
-  actionAgregarAutoresStore
+  actionAgregarAutoresStore,
+  actionExitoSubirPublicacion,
+  actionErrorSubirPublicacion
 } from "../ACCIONES";
 
 //takeEvery es un listener que escucha todos los dispatch que
@@ -135,6 +137,7 @@ const escribirAutorPublicaciones = ({ uid, key }) =>
 //Cuando se ejecute el dispatch, el reducer va venir aqui y va detener la funcion con el yield
 function* sagaSubirPublicacion({ values }) {
   try {
+    //throw new Error("La publicación no se realizó"); //Para probar el error
     const imagen = yield select(state => state.reducerImagenPublicacion);
     const usuario = yield select(state => state.reducerSesion);
     const { uid } = usuario;
@@ -157,8 +160,11 @@ function* sagaSubirPublicacion({ values }) {
       escribirAutorPublicaciones,
       parametrosAutorPublic
     );
+
+    yield put(actionExitoSubirPublicacion());
   } catch (error) {
     console.log(error);
+    yield put(actionErrorSubirPublicacion());
   }
 }
 
@@ -198,8 +204,9 @@ function* sagaDescargarPublicaciones() {
     ); //Regresa un callback - call, regresa un objeto. Obtener una publciacion, agarra cada uno de los elementos del arreglo
     //yield call() - {CALL: {fn:descargarPublicaciones, arg:[]}} eso es lo que hace el call
     console.log(autores);
+
+    //put: Hacer dispatch desde el middlware - Es como si tuviera el dispatch o se estuviera haciendo
     yield put(actionAgregarAutoresStore(autores));
-    //Hacer dispatch desde el middlware
     yield put(actionAgregarPublicacionesStore(publicaciones)); //Envia las publicaciones al store
   } catch (error) {
     console.log(error);
